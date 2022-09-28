@@ -1,0 +1,15 @@
+### Create new Admin
+POST http://localhost:8080/api/createAdmin/
+Content-Type: application/json
+
+{
+  "adminFullName": "Jon Arvy Enriquez",
+  "adminUsername": "Sapphirex11",
+  "adminPassword": "sap123",
+  "adminIsActive": true,
+  "adminIsSuperadmin": true
+}
+
+
+### Get main route
+GET http://localhost:8080/api/

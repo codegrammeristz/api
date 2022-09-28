@@ -10,7 +10,7 @@ datasource db {
 model Admin {
   admin_id            String   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
   admin_full_name     String   @db.VarChar(256)
-  admin_username      String   @db.VarChar(64)
+  admin_username      String   @unique @db.VarChar(64)
   admin_password_salt String   @db.Char(5)
   admin_password_hash String   @db.VarChar(512)
   admin_is_active     Boolean? @default(true)
@@ -20,15 +20,14 @@ model Admin {
 }
 
 model Customer {
-  customer_id             String  @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  customer_first_name     String  @db.VarChar(256)
-  customer_last_name      String  @db.VarChar(256)
-  customer_password_salt  String  @db.Char(5)
-  customer_password_hash  String  @db.VarChar(512)
-  customer_email          String  @unique @db.VarChar(256)
-  customer_contact_number String  @db.VarChar(64)
-  customer_is_active      Boolean @default(true)
-  order                   Order[]
+  customer_id            String  @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  customer_first_name    String  @db.VarChar(256)
+  customer_last_name     String  @db.VarChar(256)
+  customer_password_salt String  @db.Char(5)
+  customer_password_hash String  @db.VarChar(512)
+  customer_email         String  @unique @db.VarChar(256)
+  customer_is_active     Boolean @default(true)
+  order                  Order[]
 
   @@map("customer")
 }
@@ -46,10 +45,10 @@ model Product {
   product_name                       String      @db.VarChar(256)
   product_price                      Decimal     @db.Decimal(12, 2)
   product_image_link                 String      @db.VarChar(512)
-  product_stock                      Int         @default(0)
   product_type                       Int
   product_description                String      @db.VarChar(512)
   product_code                       String      @unique @db.VarChar(64)
+  product_is_active                  Boolean     @default(true)
   product_type_productToproduct_type ProductType @relation(fields: [product_type], references: [product_type_id], onDelete: NoAction, onUpdate: NoAction, map: "product_product_type_product_type_id_fk")
   order                              Order[]
 
@@ -88,7 +87,8 @@ model Order {
   order_date                       DateTime    @db.Timestamptz(6)
   order_staff_username             String      @db.VarChar(64)
   order_status                     Int
-  order_number                     Int         @default(autoincrement())
+  order_number                     Int         @unique @default(autoincrement())
+  order_quantity                   Int         @default(1)
   customer                         Customer    @relation(fields: [order_customer_email], references: [customer_email], onDelete: NoAction, onUpdate: NoAction, map: "order_customer_customer_email_fk")
   order_status_orderToorder_status OrderStatus @relation(fields: [order_status], references: [order_status_id], onDelete: NoAction, onUpdate: NoAction, map: "order_order_status_order_status_id_fk")
   product                          Product     @relation(fields: [order_product_code], references: [product_code], onDelete: NoAction, onUpdate: NoAction, map: "order_product_product_code_fk")
@@ -118,7 +118,8 @@ model Transaction {
   transaction_description                        String          @db.VarChar(256)
   transaction_type                               Int
   transaction_amount                             Decimal?        @default(0.0) @db.Decimal(12, 2)
-  transaction_timestamp                          DateTime?       @default(now()) @db.Timestamptz(6)
+  transaction_date                               DateTime?       @default(now()) @db.Timestamptz(6)
+  transaction_state                              String?         @db.VarChar(64)
   transaction_type_transactionTotransaction_type TransactionType @relation(fields: [transaction_type], references: [transaction_type_id], onDelete: NoAction, onUpdate: NoAction, map: "transaction_transaction_type_transaction_type_id_fk")
 
   @@map("transaction")

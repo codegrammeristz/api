@@ -1,14 +1,13 @@
 import { PrismaClient } from '@prisma/client'
-const prisma = new PrismaClient()
 
 const client = new PrismaClient()
 
 const connect = async () => {
-    await prisma.$connect()
+    await client.$connect()
 }
 
 const disconnect = async ()  => {
-    await prisma.$disconnect()
+    await client.$disconnect()
 }
 
 export { client, connect, disconnect }
