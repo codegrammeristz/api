@@ -10,7 +10,7 @@ const router = express.Router();
  * ROOT URL: /api/staff/
  **/
 router.get("/", getAllStaff);
-router.get("/:id", getSingleStaff);
+router.get("/:username", getSingleStaff);
 router.post("/createStaff", createStaff);
 router.put("/updateStaff/:id", updateStaff);
 router.get("/auth/:username", getStaffForAuth);

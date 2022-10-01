@@ -29,7 +29,7 @@ const getSingleStaff = async (req, res) => {
 
     const staff = await client.Staff.findUnique({
         where: {
-            staff_id: req.params.id
+            staff_username: req.params.username
         }
     })
 
