@@ -17,7 +17,7 @@ const getSingleOrder = async (req, res) => {
 
     const order = await client.Order.findUnique({
         where: {
-            order_number: req.params.id
+            order_number: parseInt(req.params.id)
         }
     })
 
