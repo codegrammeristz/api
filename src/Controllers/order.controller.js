@@ -60,10 +60,44 @@ const createOrder = async (req, res) => {
     await disconnect()
 }
 
-const updateOrder = async (req, res) => {
+const updateOrderStatus = async (req, res) => {
     await connect()
+
+    const {orderStatus} = req.body;
+
+    const order = await client.Order.update({
+        where: {
+            order_number: parseInt(req.params.id)
+        },
+        data: {
+            order_status: orderStatus
+        }
+    })
+
+    res.status(200).json({
+        message: "Order status updated successfully",
+    })
 
     await disconnect()
 }
 
-export {getAllOrder, getSingleOrder, createOrder, updateOrder}
+const getRevenue = async (req, res) => {
+    await connect()
+
+    let today = new Date()
+    let oneWeekLater = today.setDate(today.getDate() + 7)
+
+    const weekRevenue = await prisma.$queryRaw`
+        SELECT 
+    `
+
+    const dayRevenue = await client.Order.aggregate({
+        _sum: {
+            order_price: true
+        }
+    })
+
+    await disconnect()
+}
+
+export {getAllOrder, getSingleOrder, createOrder, updateOrderStatus, getRevenue}
