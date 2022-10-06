@@ -84,17 +84,26 @@ const updateOrderStatus = async (req, res) => {
 const getRevenue = async (req, res) => {
     await connect()
 
-    let today = new Date()
-    let oneWeekLater = today.setDate(today.getDate() + 7)
-
-    const weekRevenue = await prisma.$queryRaw`
-        SELECT 
+    const dayRevenueTotal = await client.$queryRaw`
+        SELECT
+            COALESCE(SUM(p.product_price * o.order_quantity), 0) as revenue
+        FROM "order" o JOIN product p ON o.order_product_code=p.product_code
+        WHERE o.order_status = 4
+          AND o.order_date::date = CURRENT_DATE;
     `
 
-    const dayRevenue = await client.Order.aggregate({
-        _sum: {
-            order_price: true
-        }
+    const weeklyRevenueTotal = await client.$queryRaw`
+    SELECT
+        COALESCE(SUM(p.product_price * o.order_quantity), 0) as weekly_revenue
+    FROM "order" o JOIN product p on o.order_product_code = p.product_code
+    WHERE o.order_status = 4
+      AND o.order_date::date
+      BETWEEN '2022-10-02'::date AND '2022-10-08'::date
+    `
+
+    res.status(200).json({
+        dayRevenue: dayRevenueTotal[0].revenue,
+        weeklyRevenue: weeklyRevenueTotal[0].weekly_revenue
     })
 
     await disconnect()

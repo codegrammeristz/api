@@ -10,9 +10,9 @@ const router = express.Router();
  * ROOT URL: /api/order/
  **/
 router.get("/", getAllOrder);
+router.get("/revenue", getRevenue)
 router.get("/:id", getSingleOrder);
 router.post("/createOrder", createOrder);
 router.patch("/updateOrderStatus/:id", updateOrderStatus);
-router.get("/revenue", getRevenue)
 
 export { router as orderRoutes }
