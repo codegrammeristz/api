@@ -8,6 +8,7 @@ import {orderRoutes} from "./Routes/order.routes.js"
 import {productRoutes} from "./Routes/product.routes.js"
 import {staffRoutes} from "./Routes/staff.routes.js"
 import {transactionRoutes} from "./Routes/transaction.routes.js"
+import {client, connect, disconnect} from "./Utils/prismaHandler.js";
 
 const app = express()
 
@@ -28,3 +29,25 @@ app.use("/api/order", orderRoutes)
 app.use("/api/product", productRoutes)
 app.use("/api/staff", staffRoutes)
 app.use("/api/transaction", transactionRoutes)
+
+app.get("/api/meta/rowCount", async (req, res) => {
+    await connect()
+
+    const customer = await client.Customer.count()
+    const staff = await client.Staff.count()
+    const product = await client.Product.count()
+    const order = await client.Order.count()
+    const admin = await client.Admin.count()
+    const transaction = await client.Transaction.count()
+
+    res.status(200).json({
+        customer: customer,
+        staff: staff,
+        product: product,
+        order: order,
+        admin: admin,
+        transaction: transaction
+    })
+
+    await disconnect()
+})

@@ -79,7 +79,9 @@ const createCustomer = async (req, res) => {
 
 const updateCustomer = async (req, res) => {
     await connect()
-    
+
+    res.send("gege lods")
+
     await disconnect()
 }
 
