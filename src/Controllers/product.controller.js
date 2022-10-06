@@ -17,7 +17,7 @@ const getSingleProduct = async (req, res) => {
 
     const product = await client.Product.findUnique({
         where: {
-            product_code: req.params.id
+            product_code: req.params.code
         }
     })
 
@@ -66,4 +66,25 @@ const updateProduct = async (req, res) => {
     await disconnect()
 }
 
-export {getAllProduct, getSingleProduct, createProduct, updateProduct}
+const updateProductVisibility = async (req, res) => {
+    await connect()
+
+    const {productIsActive} = req.body
+
+    const order = await client.Product.update({
+        where: {
+            product_code: req.params.code
+        },
+        data: {
+            product_is_active: productIsActive
+        }
+    })
+
+    res.status(200).json({
+        message: "Product visibility updated successfully",
+    })
+
+    await disconnect()
+}
+
+export {getAllProduct, getSingleProduct, createProduct, updateProduct, updateProductVisibility}

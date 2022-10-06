@@ -31,7 +31,7 @@ const getSingleCustomer = async (req, res) => {
 
     const customer = await client.Customer.findUnique({
         where: {
-            customer_id: req.params.id
+            customer_id: req.params.email
         }
     })
 
@@ -79,22 +79,8 @@ const createCustomer = async (req, res) => {
 
 const updateCustomer = async (req, res) => {
     await connect()
-
     
-
     await disconnect()
-}
-
-const loginCustomer = async (req, res) => {
-    const {customerEmail, customerPassword} = req.body
-    const customer = await supabase.auth.signInWithPassword({
-        email: customerEmail,
-        password: customerPassword
-    })
-
-    res.status(200).json({
-        customer: customer
-    })
 }
 
 const getCustomerForAuth = async (req, res) => {

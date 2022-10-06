@@ -39,7 +39,7 @@ const getSingleStaff = async (req, res) => {
     )
 
     res.status(200).json({
-        staffDetails: optimizedStaffDetails
+        staff: optimizedStaffDetails
     })
 
     await disconnect()
