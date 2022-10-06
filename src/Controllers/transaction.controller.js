@@ -3,7 +3,7 @@ import { connect, client, disconnect } from "../Utils/prismaHandler.js";
 const getAllTransaction = async (req, res) => {
     await connect()
 
-    const transactions = await client.Transactions.findMany()
+    const transactions = await client.Transaction.findMany()
 
     res.status(200).json({
         transactions
