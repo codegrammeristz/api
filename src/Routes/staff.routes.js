@@ -12,7 +12,7 @@ const router = express.Router();
 router.get("/", getAllStaff);
 router.get("/:username", getSingleStaff);
 router.post("/createStaff", createStaff);
-router.put("/updateStaff/:id", updateStaff);
+router.put("/updateStaff/:username", updateStaff);
 router.get("/auth/:username", getStaffForAuth);
 
 export { router as staffRoutes }

@@ -30,7 +30,7 @@ const getSingleAdmin = async (req, res) => {
 
     const admin = await client.Admin.findUnique({
         where: {
-            admin_id: req.params.id
+            admin_username: req.params.username
         }
     })
 
@@ -78,7 +78,7 @@ const updateAdmin = async (req, res) => {
 
     const admin = await client.Admin.update({
         where: {
-            admin_id: req.params.id
+            admin_username: req.params.username
         },
         data: {
             admin_full_name: adminFullName,

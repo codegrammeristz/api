@@ -3,7 +3,7 @@ import fernet from 'fernet'
 const secret = new fernet.Secret("KnUnWaSL29SLlqz_F3m3QbRbb6Q8w8CuFFmLgDyClZE=")
 const token = new fernet.Token({
     secret: secret,
-    ttl: 1652,
+    ttl: 0,
     maxClockSkew: 80
 })
 
@@ -17,7 +17,7 @@ export function encryptPassword(salt, password) {
 }
 
 export function decryptPassword(salt, hashedPassword) {
-    let decryptedPassword = ""
+    let decryptedPassword
     decryptedPassword = token.decode(hashedPassword)
     decryptedPassword = decryptedPassword.replace(salt, "")
     return decryptedPassword

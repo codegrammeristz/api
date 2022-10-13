@@ -74,7 +74,7 @@ const updateStaff = async (req, res) => {
 
     await client.Staff.update({
         where: {
-            staff_id: req.params.id
+            staff_id: req.params.username
         },
         data: {
             staff_full_name: staffFullName,
@@ -103,6 +103,11 @@ const getStaffForAuth = async (req, res) => {
         ...staff,
         staff_password: decryptPassword(staff.staff_password_salt, staff.staff_password_hash)
     }
+
+    keyExcluder(
+        decryptedStaff,
+        "staff_password_salt", "staff_password_hash"
+    )
 
     res.status(200).json({
         staffDetails: decryptedStaff

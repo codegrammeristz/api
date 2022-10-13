@@ -31,7 +31,7 @@ const getSingleCustomer = async (req, res) => {
 
     const customer = await client.Customer.findUnique({
         where: {
-            customer_id: req.params.email
+            customer_email: req.params.email
         }
     })
 
@@ -96,7 +96,7 @@ const getCustomerForAuth = async (req, res) => {
 
     let decryptedCustomer = {
         ...customer,
-        customer_password_hash: decryptPassword(customer.customer_password_salt, customer.customer_password_hash)
+        customer_password: decryptPassword(customer.customer_password_salt, customer.customer_password_hash)
     }
 
     keyExcluder(

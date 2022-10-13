@@ -10,9 +10,9 @@ const router = express.Router();
  * ROOT URL: /api/admin/
  **/
 router.get("/", getAllAdmin);
-router.get("/:id", getSingleAdmin);
+router.get("/:username", getSingleAdmin);
 router.post("/createAdmin", createAdmin);
-router.put("/updateAdmin/:id", updateAdmin);
+router.put("/updateAdmin/:username", updateAdmin);
 router.get("/auth/:username", getAdminForAuth);
 
 export { router as adminRoutes }
