@@ -109,4 +109,21 @@ const getRevenue = async (req, res) => {
     await disconnect()
 }
 
-export {getAllOrder, getSingleOrder, createOrder, updateOrderStatus, getRevenue}
+const getFulfilledOrderByEmail = async (req, res) => {
+    await connect()
+
+    const orders = await client.Order.findMany({
+        where: {
+            order_customer_email: req.params.email,
+            order_status: 4
+        }
+    })
+
+    res.status(200).json({
+        orders
+    })
+
+    await disconnect()
+}
+
+export {getAllOrder, getSingleOrder, createOrder, updateOrderStatus, getRevenue, getFulfilledOrderByEmail}

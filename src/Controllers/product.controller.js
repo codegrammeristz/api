@@ -63,6 +63,8 @@ const createProduct = async (req, res) => {
 const updateProduct = async (req, res) => {
     await connect()
 
+
+
     await disconnect()
 }
 
