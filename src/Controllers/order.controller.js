@@ -116,6 +116,9 @@ const getFulfilledOrderByEmail = async (req, res) => {
         where: {
             order_customer_email: req.params.email,
             order_status: 4
+        },
+        orderBy: {
+            order_date: "desc"
         }
     })
 
@@ -126,4 +129,26 @@ const getFulfilledOrderByEmail = async (req, res) => {
     await disconnect()
 }
 
-export {getAllOrder, getSingleOrder, createOrder, updateOrderStatus, getRevenue, getFulfilledOrderByEmail}
+const getNotFulfilledOrdersByEmail = async (req, res) => {
+    await connect()
+
+    const orders = await client.Order.findMany({
+        where: {
+            order_customer_email: req.params.email,
+            order_status: {
+                not: 4
+            }
+        },
+        orderBy: {
+            order_date: "desc"
+        }
+    })
+
+    res.status(200).json({
+        orders
+    })
+
+    await disconnect()
+}
+
+export {getAllOrder, getSingleOrder, createOrder, updateOrderStatus, getRevenue, getFulfilledOrderByEmail, getNotFulfilledOrdersByEmail}

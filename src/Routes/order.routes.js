@@ -7,7 +7,8 @@ import {
     getSingleOrder,
     updateOrderStatus,
     getRevenue,
-    getFulfilledOrderByEmail
+    getFulfilledOrderByEmail,
+    getNotFulfilledOrdersByEmail
 } from "../Controllers/order.controller.js";
 
 // router
@@ -18,9 +19,10 @@ const router = express.Router();
  **/
 router.get("/", getAllOrder);
 router.get("/get/:email", getFulfilledOrderByEmail)
+router.get("/get/:email/notFulfilled", getNotFulfilledOrdersByEmail)
 router.get("/revenue", getRevenue)
 router.get("/:id", getSingleOrder);
 router.post("/createOrder", createOrder);
 router.patch("/updateOrderStatus/:id", updateOrderStatus);
 
-export { router as orderRoutes }
+export {router as orderRoutes}
