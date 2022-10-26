@@ -76,6 +76,7 @@ const updateOrderStatus = async (req, res) => {
 
     res.status(200).json({
         message: "Order status updated successfully",
+        order: order
     })
 
     await disconnect()

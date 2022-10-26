@@ -63,6 +63,35 @@ const createProduct = async (req, res) => {
 const updateProduct = async (req, res) => {
     await connect()
 
+    const {
+        productCode,
+        productName,
+        productDescription,
+        productPrice,
+        productImage,
+        productIsActive,
+        productType,
+    } = req.body;
+
+    const product = await client.Product.update({
+        where: {
+            product_code: req.params.code
+        },
+        data: {
+            product_code: productCode,
+            product_name: productName,
+            product_description: productDescription,
+            product_price: productPrice,
+            product_image_link: productImage,
+            product_is_active: productIsActive,
+            product_type: productType
+        }
+    })
+
+    res.status(200).json({
+        message: "Product updated successfully",
+        product: product
+    })
 
 
     await disconnect()
