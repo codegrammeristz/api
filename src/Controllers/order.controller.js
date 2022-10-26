@@ -3,7 +3,11 @@ import {connect, client, disconnect} from "../Utils/prismaHandler.js";
 const getAllOrder = async (req, res) => {
     await connect()
 
-    const orders = await client.Order.findMany()
+    const orders = await client.Order.findMany({
+        orderBy: {
+            order_date: "desc"
+        }
+    })
 
     res.status(200).json({
         orders
@@ -82,6 +86,27 @@ const updateOrderStatus = async (req, res) => {
     await disconnect()
 }
 
+const getTodayOrders = async (req, res) => {
+    await connect()
+
+    const orders = await client.Order.findMany({
+        where: {
+            order_date: {
+                gte: new Date(new Date().setHours(0, 0, 0, 0))
+            }
+        },
+        orderBy: {
+            order_date: "desc"
+        }
+    })
+
+    res.status(200).json({
+        orders
+    })
+
+    await disconnect()
+}
+
 const getRevenue = async (req, res) => {
     await connect()
 
@@ -152,4 +177,13 @@ const getNotFulfilledOrdersByEmail = async (req, res) => {
     await disconnect()
 }
 
-export {getAllOrder, getSingleOrder, createOrder, updateOrderStatus, getRevenue, getFulfilledOrderByEmail, getNotFulfilledOrdersByEmail}
+export {
+    getAllOrder,
+    getSingleOrder,
+    createOrder,
+    updateOrderStatus,
+    getRevenue,
+    getFulfilledOrderByEmail,
+    getNotFulfilledOrdersByEmail,
+    getTodayOrders
+}

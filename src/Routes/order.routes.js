@@ -8,18 +8,19 @@ import {
     updateOrderStatus,
     getRevenue,
     getFulfilledOrderByEmail,
-    getNotFulfilledOrdersByEmail
+    getNotFulfilledOrdersByEmail, getTodayOrders
 } from "../Controllers/order.controller.js";
 
 // router
 const router = express.Router();
 
 /**
- * ROOT URL: /api/order/
+ * ROOT URL: /api/order
  **/
 router.get("/", getAllOrder);
 router.get("/get/:email", getFulfilledOrderByEmail)
 router.get("/get/:email/notFulfilled", getNotFulfilledOrdersByEmail)
+router.get("/today", getTodayOrders)
 router.get("/revenue", getRevenue)
 router.get("/:id", getSingleOrder);
 router.post("/createOrder", createOrder);
