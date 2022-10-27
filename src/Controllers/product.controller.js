@@ -118,4 +118,96 @@ const updateProductVisibility = async (req, res) => {
     await disconnect()
 }
 
-export {getAllProduct, getSingleProduct, createProduct, updateProduct, updateProductVisibility}
+const getProductFrequency = async (req, res) => {
+    await connect()
+
+    // const [frequentlyBought, notFrequentlyBought] = await Promise.all([
+    //     client.$queryRaw`
+    //     SELECT
+    //         count(*) as frequency,
+    //         order_product_code
+    //     FROM "order"
+    //     GROUP BY order_product_code
+    //     ORDER BY frequency DESC
+    //     LIMIT 5;
+    //     `, client.$queryRaw`
+    //     SELECT
+    //         count(*) as frequency,
+    //         order_product_code
+    //     FROM "order"
+    //     GROUP BY order_product_code
+    //     ORDER BY frequency
+    //     LIMIT 5;
+    //     `
+    // ])
+
+    const frequentlyBought = await client.Order.groupBy({
+        by: ["order_product_code"],
+        _count: {
+            order_product_code: true
+        },
+        orderBy: {
+            _count: {
+                order_product_code: "desc"
+            }
+        },
+        take: 5
+    })
+
+    const notFrequentlyBought = await client.Order.groupBy({
+        by: ["order_product_code"],
+        _count: {
+            order_product_code: true
+        },
+        orderBy: {
+            _count: {
+                order_product_code: "asc"
+            }
+        },
+        take: 5
+    })
+
+    // const products = await client.Order.groupBy({
+    //     by: ['order_product_code']
+    // })
+
+    res.status(200).json({
+        frequentlyBought,
+        notFrequentlyBought
+    })
+
+    await disconnect()
+}
+
+const searchProduct = async (req, res) => {
+    await connect()
+
+    const searchTerm = req.params.query
+
+    const products = await client.Product.findMany({
+        where: {
+            OR: [
+                {
+                    product_name: {
+                        contains: searchTerm,
+                        mode: 'insensitive'
+                    }
+                },
+                {
+                    product_description: {
+                        contains: searchTerm,
+                        mode: 'insensitive'
+                    }
+                }
+            ]
+        }
+    })
+
+    res.status(200).json({
+        products
+    })
+
+    await disconnect()
+}
+
+export {getAllProduct, getSingleProduct, createProduct, updateProduct, updateProductVisibility, getProductFrequency, searchProduct}
