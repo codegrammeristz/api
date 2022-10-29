@@ -50,7 +50,7 @@ const getSingleCustomer = async (req, res) => {
 const createCustomer = async (req, res) => {
     await connect()
 
-    const {customerFirstName, customerLastName, customerEmail, customerPassword, customerIsActive} = req.body;
+    const {customerFirstName, customerLastName, customerEmail, customerPassword, customerGcashName, customerGcashNumber, customerIsActive} = req.body;
     const salt = createSalt()
 
     let {user, error} = await supabase.auth.signUp({
@@ -58,12 +58,14 @@ const createCustomer = async (req, res) => {
         password: customerPassword
     })
 
-    await client.Customer.create({
+    const customer = await client.Customer.create({
         data: {
             customer_first_name: customerFirstName,
             customer_last_name: customerLastName,
             customer_email: customerEmail,
             customer_password_salt: salt,
+            customer_gcash_name: customerGcashName,
+            customer_gcash_number: customerGcashNumber,
             customer_password_hash: encryptPassword(salt, customerPassword),
             customer_is_active: customerIsActive
         }
@@ -71,7 +73,8 @@ const createCustomer = async (req, res) => {
 
     res.status(201).json({
         message: "Customer created successfully",
-        user: user
+        accountDetails: user,
+        customer: customer
     })
 
     await disconnect()
@@ -80,7 +83,43 @@ const createCustomer = async (req, res) => {
 const updateCustomer = async (req, res) => {
     await connect()
 
-    res.send("gege lods")
+    const {customerFirstName, customerLastName, customerEmail, customerPassword, customerGcashName, customerGcashNumber, customerIsActive} = req.body;
+    const salt = createSalt()
+
+
+    await supabase.auth.signIn({
+        email: req.params.email,
+        password: customerPassword
+    })
+
+    const { user, error } = await supabase.auth.update({
+        email: customerEmail,
+        password: customerPassword,
+    })
+
+    const customer = await client.Customer.update({
+        where: {
+            customer_email: req.params.email
+        },
+        data: {
+            customer_first_name: customerFirstName,
+            customer_last_name: customerLastName,
+            customer_email: customerEmail,
+            customer_password_salt: salt,
+            customer_gcash_name: customerGcashName,
+            customer_gcash_number: customerGcashNumber,
+            customer_password_hash: encryptPassword(salt, customerPassword),
+            customer_is_active: customerIsActive
+        }
+    })
+
+    await supabase.auth.signOut()
+
+    res.status(200).json({
+        message: "Customer updated successfully",
+        accountDetails: user,
+        customer: customer
+    })
 
     await disconnect()
 }
