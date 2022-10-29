@@ -27,6 +27,8 @@ model Customer {
   customer_password_hash String  @db.VarChar(512)
   customer_email         String  @unique @db.VarChar(256)
   customer_is_active     Boolean @default(true)
+  customer_gcash_name    String? @unique @db.VarChar
+  customer_gcash_number  String? @unique @db.VarChar
   order                  Order[]
 
   @@map("customer")
