@@ -51,7 +51,7 @@ const createStaff = async (req, res) => {
     const {staffFullName, staffContactNumber, staffUsername, staffPassword, staffPosition, staffIsActive} = req.body;
     const salt = createSalt()
 
-    await client.Staff.create({
+    const staff = await client.Staff.create({
         data: {
             staff_full_name: staffFullName,
             staff_contact_number: staffContactNumber,
@@ -63,6 +63,11 @@ const createStaff = async (req, res) => {
         }
     })
 
+    res.status(201).json({
+        message: "Staff created successfully",
+        staffDetails: staff
+    })
+
     await disconnect()
 }
 
@@ -72,9 +77,9 @@ const updateStaff = async (req, res) => {
     const {staffFullName, staffContactNumber, staffUsername, staffPassword, staffPosition, staffIsActive} = req.body;
     const salt = createSalt()
 
-    await client.Staff.update({
+    const staff = await client.Staff.update({
         where: {
-            staff_id: req.params.username
+            staff_username: req.params.username
         },
         data: {
             staff_full_name: staffFullName,
@@ -85,6 +90,11 @@ const updateStaff = async (req, res) => {
             staff_position: staffPosition,
             staff_is_active: staffIsActive
         }
+    })
+
+    res.status(200).json({
+        message: "Staff updated successfully",
+        staffDetails: staff
     })
 
     await disconnect()
