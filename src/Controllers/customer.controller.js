@@ -176,7 +176,7 @@ const loginCustomer = async (req, res) => {
                 message: "Customer logged in successfully",
                 accountDetails: user,
                 session: session,
-                customer: optimizedCustomerDetails
+                customer
             })
         }
     } catch (e) {
