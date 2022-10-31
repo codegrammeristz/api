@@ -160,6 +160,17 @@ const loginCustomer = async (req, res) => {
         password: customerPassword
     })
 
+    const customer = await client.Customer.findUnique({
+        where: {
+            customer_email: customerEmail
+        }
+    })
+
+    const optimizedCustomerDetails = keyExcluder(
+        customer,
+        "customer_password_salt", "customer_password_hash"
+    )
+
     if (error != null) {
         res.status(401).json({
             message: "Invalid credentials"
@@ -168,7 +179,8 @@ const loginCustomer = async (req, res) => {
         res.status(200).json({
             message: "Customer logged in successfully",
             accountDetails: user,
-            session: session
+            session: session,
+            customer: optimizedCustomerDetails
         })
     }
 
