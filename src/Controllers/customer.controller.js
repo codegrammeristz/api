@@ -150,4 +150,29 @@ const getCustomerForAuth = async (req, res) => {
     await disconnect()
 }
 
-export {getAllCustomer, getSingleCustomer, createCustomer, updateCustomer, getCustomerForAuth}
+const loginCustomer = async (req, res) => {
+    await connect()
+
+    const {customerEmail, customerPassword} = req.body
+
+    const { user, session, error } = await supabase.auth.signIn({
+        email: customerEmail,
+        password: customerPassword
+    })
+
+    if (error != null) {
+        res.status(401).json({
+            message: "Invalid credentials"
+        })
+    } else {
+        res.status(200).json({
+            message: "Customer logged in successfully",
+            accountDetails: user,
+            session: session
+        })
+    }
+
+    await disconnect()
+}
+
+export {getAllCustomer, getSingleCustomer, createCustomer, updateCustomer, getCustomerForAuth, loginCustomer}
