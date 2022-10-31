@@ -17,7 +17,7 @@ const router = express.Router();
  * ROOT URL: /api/customer/
  **/
 router.get("/", getAllCustomer);
-router.get("/login", loginCustomer)
+router.post("/login", loginCustomer)
 router.get("/:email", getSingleCustomer);
 router.post("/createCustomer", createCustomer);
 router.put("/updateCustomer/:email", updateCustomer);
