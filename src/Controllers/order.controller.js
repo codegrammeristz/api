@@ -64,6 +64,22 @@ const createOrder = async (req, res) => {
     await disconnect()
 }
 
+const createBulkOrder = async (req, res) => {
+    await connect()
+
+    const {orders} = req.body;
+
+    await client.Order.createMany({
+        data: orders
+    })
+
+    res.status(201).json({
+        message: "Bulk order created successfully",
+    })
+
+    await disconnect()
+}
+
 const updateOrderStatus = async (req, res) => {
     await connect()
 
