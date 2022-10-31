@@ -166,22 +166,21 @@ const loginCustomer = async (req, res) => {
         }
     })
 
-    const optimizedCustomerDetails = keyExcluder(
-        customer,
-        "customer_password_salt", "customer_password_hash"
-    )
-
-    if (error != null) {
-        res.status(401).json({
-            message: "Invalid credentials"
-        })
-    } else {
-        res.status(200).json({
-            message: "Customer logged in successfully",
-            accountDetails: user,
-            session: session,
-            customer: optimizedCustomerDetails
-        })
+    try {
+        if (error != null) {
+            res.status(401).json({
+                message: "Invalid credentials"
+            })
+        } else {
+            res.status(200).json({
+                message: "Customer logged in successfully",
+                accountDetails: user,
+                session: session,
+                customer: optimizedCustomerDetails
+            })
+        }
+    } catch (e) {
+        console.log(e)
     }
 
     await disconnect()
