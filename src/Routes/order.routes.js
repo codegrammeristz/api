@@ -8,7 +8,7 @@ import {
     updateOrderStatus,
     getRevenue,
     getFulfilledOrderByEmail,
-    getNotFulfilledOrdersByEmail, getTodayOrders
+    getNotFulfilledOrdersByEmail, getTodayOrders, createBulkOrder
 } from "../Controllers/order.controller.js";
 
 // router
@@ -24,6 +24,7 @@ router.get("/today", getTodayOrders)
 router.get("/revenue", getRevenue)
 router.get("/:id", getSingleOrder);
 router.post("/createOrder", createOrder);
+router.post("/bulkOrder", createBulkOrder)
 router.patch("/updateOrderStatus/:id", updateOrderStatus);
 
 export {router as orderRoutes}

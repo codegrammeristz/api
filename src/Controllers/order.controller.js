@@ -201,5 +201,6 @@ export {
     getRevenue,
     getFulfilledOrderByEmail,
     getNotFulfilledOrdersByEmail,
-    getTodayOrders
+    getTodayOrders,
+    createBulkOrder
 }

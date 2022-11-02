@@ -58,33 +58,35 @@ const createCustomer = async (req, res) => {
         password: customerPassword
     })
 
-    const customer = await client.Customer.create({
-        data: {
-            customer_first_name: customerFirstName,
-            customer_last_name: customerLastName,
-            customer_email: customerEmail,
-            customer_password_salt: salt,
-            customer_gcash_name: customerGcashName.toUpperCase(),
-            customer_gcash_number: customerGcashNumber,
-            customer_password_hash: encryptPassword(salt, customerPassword),
-            customer_is_active: customerIsActive
-        }
-    })
-
     try {
         if (error != null) {
             res.status(401).json({
                 message: "Cannot Create Account"
             })
         } else {
+            const customer = await client.Customer.create({
+                data: {
+                    customer_first_name: customerFirstName,
+                    customer_last_name: customerLastName,
+                    customer_email: customerEmail,
+                    customer_password_salt: salt,
+                    customer_gcash_name: customerGcashName.toUpperCase(),
+                    customer_gcash_number: customerGcashNumber,
+                    customer_password_hash: encryptPassword(salt, customerPassword),
+                    customer_is_active: customerIsActive
+                }
+            })
             res.status(201).json({
                 message: "Customer created successfully",
                 accountDetails: user,
-                customer: customer
+                customer: customer,
+                error: 0
             })
         }
     } catch (e) {
-        console.log(e)
+        res.status(401).json({
+            message: "Cannot Create Account"
+        })
     }
 
     await disconnect()
