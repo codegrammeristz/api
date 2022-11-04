@@ -45,7 +45,7 @@ const createOrder = async (req, res) => {
         orderStatus
     } = req.body;
 
-    await client.Order.create({
+    const data = await client.Order.create({
         data: {
             order_product_code: orderProductCode,
             order_customer_email: orderCustomerEmail,
@@ -59,6 +59,7 @@ const createOrder = async (req, res) => {
 
     res.status(201).json({
         message: "Order created successfully",
+        orderID: data.order_number
     })
 
     await disconnect()
@@ -193,6 +194,26 @@ const getNotFulfilledOrdersByEmail = async (req, res) => {
     await disconnect()
 }
 
+// get fulfilled orders after today
+const getPastFulfilledOrders = async (req, res) => {
+    await connect()
+
+    const orders = await client.Order.findMany({
+        where: {
+            order_status: 4,
+            order_date: {
+                lt: new Date(new Date().setHours(0, 0, 0, 0))
+            }
+        }
+    })
+
+    res.status(200).json({
+        orders
+    })
+
+    await disconnect()
+}
+
 export {
     getAllOrder,
     getSingleOrder,
@@ -202,5 +223,6 @@ export {
     getFulfilledOrderByEmail,
     getNotFulfilledOrdersByEmail,
     getTodayOrders,
-    createBulkOrder
+    createBulkOrder,
+    getPastFulfilledOrders
 }

@@ -8,7 +8,7 @@ import {
     updateOrderStatus,
     getRevenue,
     getFulfilledOrderByEmail,
-    getNotFulfilledOrdersByEmail, getTodayOrders, createBulkOrder
+    getNotFulfilledOrdersByEmail, getTodayOrders, createBulkOrder, getPastFulfilledOrders
 } from "../Controllers/order.controller.js";
 
 // router
@@ -19,6 +19,7 @@ const router = express.Router();
  **/
 router.get("/", getAllOrder);
 router.get("/get/:email", getFulfilledOrderByEmail)
+router.get("/get/:email/past", getPastFulfilledOrders)
 router.get("/get/:email/notFulfilled", getNotFulfilledOrdersByEmail)
 router.get("/today", getTodayOrders)
 router.get("/revenue", getRevenue)
