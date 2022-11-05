@@ -91,6 +91,7 @@ model Order {
   order_status                     Int
   order_number                     Int         @unique @default(autoincrement())
   order_quantity                   Int         @default(1)
+  order_payment_method             Int         @default(1)
   customer                         Customer    @relation(fields: [order_customer_email], references: [customer_email], onDelete: NoAction, onUpdate: NoAction, map: "order_customer_customer_email_fk")
   order_status_orderToorder_status OrderStatus @relation(fields: [order_status], references: [order_status_id], onDelete: NoAction, onUpdate: NoAction, map: "order_order_status_order_status_id_fk")
   product                          Product     @relation(fields: [order_product_code], references: [product_code], onDelete: NoAction, onUpdate: NoAction, map: "order_product_product_code_fk")
@@ -125,4 +126,19 @@ model Transaction {
   transaction_type_transactionTotransaction_type TransactionType @relation(fields: [transaction_type], references: [transaction_type_id], onDelete: NoAction, onUpdate: NoAction, map: "transaction_transaction_type_transaction_type_id_fk")
 
   @@map("transaction")
+}
+
+model OrderPaymentMethod {
+  payment_method_id          Int    @id(map: "table_name_pkey") @default(autoincrement())
+  payment_method_description String @db.VarChar(64)
+
+  @@map("order_payment_method")
+}
+
+model test {
+  id         BigInt    @id @default(autoincrement())
+  created_at DateTime? @default(now()) @db.Timestamptz(6)
+  num1       Int?
+  num2       Int?
+  product    Int?
 }

@@ -158,7 +158,7 @@ const getFulfilledOrderByEmail = async (req, res) => {
     const orders = await client.Order.findMany({
         where: {
             order_customer_email: req.params.email,
-            order_status: 4
+            order_status: 5
         },
         orderBy: {
             order_date: "desc"
@@ -179,7 +179,7 @@ const getNotFulfilledOrdersByEmail = async (req, res) => {
         where: {
             order_customer_email: req.params.email,
             order_status: {
-                not: 4
+                not: 5
             }
         },
         orderBy: {
@@ -200,7 +200,7 @@ const getPastFulfilledOrders = async (req, res) => {
 
     const orders = await client.Order.findMany({
         where: {
-            order_status: 4,
+            order_status: 5,
             order_date: {
                 lt: new Date(new Date().setHours(0, 0, 0, 0))
             }
