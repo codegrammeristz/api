@@ -42,7 +42,8 @@ const createOrder = async (req, res) => {
         orderRequests,
         orderStaffUsername,
         orderQuantity,
-        orderStatus
+        orderStatus,
+        orderPaymentMethod
     } = req.body;
 
     const data = await client.Order.create({
@@ -53,7 +54,8 @@ const createOrder = async (req, res) => {
             order_date: new Date(),
             order_staff_username: orderStaffUsername,
             order_quantity: orderQuantity,
-            order_status: orderStatus
+            order_status: orderStatus,
+            order_payment_method: orderPaymentMethod
         }
     })
 
