@@ -103,25 +103,33 @@ const updateStaff = async (req, res) => {
 const getStaffForAuth = async (req, res) => {
     await connect()
 
-    const staff = await client.Staff.findUnique({
-        where: {
-            staff_username: req.params.username
+    let staff;
+
+    try {
+        staff = await client.Staff.findUnique({
+            where: {
+                staff_username: req.params.username
+            }
+        })
+
+        let decryptedStaff = {
+            ...staff,
+            staff_password: decryptPassword(staff.staff_password_salt, staff.staff_password_hash)
         }
-    })
 
-    let decryptedStaff = {
-        ...staff,
-        staff_password: decryptPassword(staff.staff_password_salt, staff.staff_password_hash)
+        keyExcluder(
+            decryptedStaff,
+            "staff_password_salt", "staff_password_hash"
+        )
+
+        res.status(200).json({
+            staffDetails: decryptedStaff
+        })
+    } catch (e) {
+        res.status(400).json({
+            message: "Cannot find staff with username"
+        })
     }
-
-    keyExcluder(
-        decryptedStaff,
-        "staff_password_salt", "staff_password_hash"
-    )
-
-    res.status(200).json({
-        staffDetails: decryptedStaff
-    })
 
     await disconnect()
 }
