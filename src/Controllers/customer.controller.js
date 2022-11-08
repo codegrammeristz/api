@@ -68,7 +68,7 @@ const createCustomer = async (req, res) => {
                 data: {
                     customer_first_name: customerFirstName,
                     customer_last_name: customerLastName,
-                    customer_email: customerEmail,
+                    customer_email: customerEmail.toLowerCase(),
                     customer_password_salt: salt,
                     customer_gcash_name: customerGcashName.toUpperCase(),
                     customer_gcash_number: customerGcashNumber,
