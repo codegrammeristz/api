@@ -85,7 +85,7 @@ const createCustomer = async (req, res) => {
         }
     } catch (e) {
         res.status(401).json({
-            message: "Cannot Create Account"
+            message: "Cannot Create Account due to server error"
         })
     }
 
