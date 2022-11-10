@@ -53,29 +53,28 @@ const createCustomer = async (req, res) => {
     const {customerFirstName, customerLastName, customerEmail, customerPassword, customerGcashName, customerGcashNumber, customerIsActive} = req.body;
     const salt = createSalt()
 
-    let {user, error} = await supabase.auth.signUp({
-        email: customerEmail,
-        password: customerPassword
-    })
-
     try {
+        const customer = await client.Customer.create({
+            data: {
+                customer_first_name: customerFirstName,
+                customer_last_name: customerLastName,
+                customer_email: customerEmail.toLowerCase(),
+                customer_password_salt: salt,
+                customer_gcash_name: customerGcashName.toUpperCase(),
+                customer_gcash_number: customerGcashNumber,
+                customer_password_hash: encryptPassword(salt, customerPassword),
+                customer_is_active: customerIsActive
+            }
+        })
+        let {user, error} = await supabase.auth.signUp({
+            email: customerEmail,
+            password: customerPassword
+        })
         if (error != null) {
             res.status(401).json({
                 message: "Cannot Create Account"
             })
         } else {
-            const customer = await client.Customer.create({
-                data: {
-                    customer_first_name: customerFirstName,
-                    customer_last_name: customerLastName,
-                    customer_email: customerEmail.toLowerCase(),
-                    customer_password_salt: salt,
-                    customer_gcash_name: customerGcashName.toUpperCase(),
-                    customer_gcash_number: customerGcashNumber,
-                    customer_password_hash: encryptPassword(salt, customerPassword),
-                    customer_is_active: customerIsActive
-                }
-            })
             res.status(201).json({
                 message: "Customer created successfully",
                 accountDetails: user,
