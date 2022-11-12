@@ -36,6 +36,9 @@ const getSingleOrder = async (req, res) => {
 const createOrder = async (req, res) => {
     await connect()
 
+    let date = new Date()
+    date = new Date(date.setHours(date.getHours() + 8))
+
     // get order customer email from session
     const {
         orderProductCode,
@@ -52,7 +55,7 @@ const createOrder = async (req, res) => {
             order_product_code: orderProductCode,
             order_customer_email: orderCustomerEmail,
             order_requests: orderRequests,
-            order_date: new Date(),
+            order_date: date,
             order_staff_username: orderStaffUsername,
             order_quantity: orderQuantity,
             order_status: orderStatus,
@@ -130,22 +133,24 @@ const getTodayOrders = async (req, res) => {
 const getRevenue = async (req, res) => {
     await connect()
 
-    const dayRevenueTotal = await client.$queryRaw`
+    const dayRevenueTotal = client.$queryRaw`
         SELECT
             COALESCE(SUM(p.product_price * o.order_quantity), 0) as revenue
         FROM "order" o JOIN product p ON o.order_product_code=p.product_code
-        WHERE o.order_status = 4
-          AND o.order_date::date = CURRENT_DATE;
+        WHERE o.order_status = 5
+          AND (o.order_date + interval '8 hours')::date = CURRENT_DATE;
     `
 
     const weeklyRevenueTotal = await client.$queryRaw`
-    SELECT
-        COALESCE(SUM(p.product_price * o.order_quantity), 0) as weekly_revenue
-    FROM "order" o JOIN product p on o.order_product_code = p.product_code
-    WHERE o.order_status = 4
-      AND o.order_date::date
-      BETWEEN '2022-10-02'::date AND '2022-10-08'::date
+        SELECT
+            COALESCE(SUM(p.product_price * o.order_quantity), 0) as weekly_revenue
+        FROM "order" o JOIN product p on o.order_product_code = p.product_code
+        WHERE o.order_status = 5
+          AND (o.order_date + interval '8 hours')::date
+          BETWEEN '2022-11-07'::date AND '2022-11-11'::date;
     `
+
+    console.log(dayRevenueTotal, weeklyRevenueTotal)
 
     res.status(200).json({
         dayRevenue: dayRevenueTotal[0].revenue,
