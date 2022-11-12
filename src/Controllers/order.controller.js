@@ -133,7 +133,7 @@ const getTodayOrders = async (req, res) => {
 const getRevenue = async (req, res) => {
     await connect()
 
-    const dayRevenueTotal = client.$queryRaw`
+    const dayRevenueTotal = await client.$queryRaw`
         SELECT
             COALESCE(SUM(p.product_price * o.order_quantity), 0) as revenue
         FROM "order" o JOIN product p ON o.order_product_code=p.product_code
