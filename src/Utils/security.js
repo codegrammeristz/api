@@ -12,7 +12,7 @@ export function createSalt() {
 }
 
 export function encryptPassword(salt, password) {
-    // const passwordString = `${salt}${password}`;
+    // const passwordString = `${salt}${password}`
     return password
 }
 
