@@ -107,18 +107,18 @@ const getAdminForAuth = async (req, res) => {
         }
     })
 
-    let decryptedAdmin = {
-        ...admin,
-        admin_password: decryptPassword(admin.admin_password_salt, admin.admin_password_hash)
-    }
+    // let decryptedAdmin = {
+    //     ...admin,
+    //     admin_password: decryptPassword("", admin.admin_password_hash)
+    // }
 
-    keyExcluder(
-        decryptedAdmin,
-        "admin_password_salt", "admin_password_hash"
-    )
+    // keyExcluder(
+    //     decryptedAdmin,
+    //     "admin_password_salt", "admin_password_hash"
+    // )
 
     res.status(200).json({
-        adminDetails: decryptedAdmin
+        adminDetails: {...admin, admin_password: admin.admin_password_hash}
     })
 
     await disconnect()

@@ -12,13 +12,13 @@ export function createSalt() {
 }
 
 export function encryptPassword(salt, password) {
-    const passwordString = `${salt}${password}`;
-    return token.encode(passwordString)
+    // const passwordString = `${salt}${password}`;
+    return password
 }
 
 export function decryptPassword(salt, hashedPassword) {
-    let decryptedPassword
-    decryptedPassword = token.decode(hashedPassword)
-    decryptedPassword = decryptedPassword.replace(salt, "")
-    return decryptedPassword
+    // let decryptedPassword
+    // decryptedPassword = token.decode(hashedPassword)
+    // decryptedPassword = decryptedPassword.replace(salt, "")
+    return hashedPassword
 }
