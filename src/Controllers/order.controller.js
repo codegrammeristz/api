@@ -147,7 +147,7 @@ const getRevenue = async (req, res) => {
         FROM "order" o JOIN product p on o.order_product_code = p.product_code
         WHERE o.order_status = 5
           AND (o.order_date + interval '8 hours')::date
-          BETWEEN '2022-11-07'::date AND '2022-11-11'::date;
+          BETWEEN '2022-11-14'::date AND '2022-11-18'::date;
     `
 
     console.log(dayRevenueTotal, weeklyRevenueTotal)
