@@ -138,7 +138,7 @@ const getRevenue = async (req, res) => {
             COALESCE(SUM(p.product_price * o.order_quantity), 0) as revenue
         FROM "order" o JOIN product p ON o.order_product_code=p.product_code
         WHERE o.order_status = 5
-          AND (o.order_date)::date = CURRENT_DATE;
+          AND (o.order_date + interval '8 hours')::date = CURRENT_DATE;
     `
 
     const weeklyRevenueTotal = await client.$queryRaw`
