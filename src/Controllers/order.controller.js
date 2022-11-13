@@ -146,7 +146,7 @@ const getRevenue = async (req, res) => {
             COALESCE(SUM(p.product_price * o.order_quantity), 0) as weekly_revenue
         FROM "order" o JOIN product p on o.order_product_code = p.product_code
         WHERE o.order_status = 5
-          AND (o.order_date + interval '8 hours')::date
+          AND (o.order_date)::date
           BETWEEN '2022-11-14'::date AND '2022-11-18'::date;
     `
 
