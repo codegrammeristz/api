@@ -133,29 +133,76 @@ const getTodayOrders = async (req, res) => {
 const getRevenue = async (req, res) => {
     await connect()
 
-    const dayRevenueTotal = await client.$queryRaw`
-        SELECT
-            COALESCE(SUM(p.product_price * o.order_quantity), 0) as revenue
-        FROM "order" o JOIN product p ON o.order_product_code=p.product_code
-        WHERE o.order_status = 5
-          AND (o.order_date + interval '8 hours')::date = CURRENT_DATE;
-    `
+    const dayRevenueTotal = await client.Order.findMany({
+        where: {
+            order_date: {
+                gte: new Date(new Date().setHours(0, 0, 0, 0))
+            },
+            order_status: 5
+        },
+        select: {
+            order_quantity: true,
+            order_product_code: true,
+            product: {
+                select: {
+                    product_price: true
+                }
+            }
+        }
+    })
 
-    const weeklyRevenueTotal = await client.$queryRaw`
-        SELECT
-            COALESCE(SUM(p.product_price * o.order_quantity), 0) as weekly_revenue
-        FROM "order" o JOIN product p on o.order_product_code = p.product_code
-        WHERE o.order_status = 5
-          AND (o.order_date)::date
-          BETWEEN '2022-11-14'::date AND '2022-11-18'::date;
-    `
+    // compute daily revenue from dayRevenueTotal
+    let dayRevenue = 0
+    dayRevenueTotal.forEach(order => {
+        // console.log(order)
+        console.log(dayRevenue, `${order.order_product_code} ${order.order_quantity} ${order.product.product_price}`)
+        dayRevenue += order.order_quantity * parseFloat(order.product.product_price)
+    })
 
-    console.log(dayRevenueTotal, weeklyRevenueTotal)
+    // const weeklyRevenueTotal = await client.$queryRaw`
+    //     SELECT
+    //         COALESCE(SUM(p.product_price * o.order_quantity), 0) as weekly_revenue
+    //     FROM "order" o JOIN product p on o.order_product_code = p.product_code
+    //     WHERE o.order_status = 5
+    //       AND (o.order_date)::date
+    //       BETWEEN '2022-11-14'::date AND '2022-11-18'::date;
+    // `
+
+    const weeklyRevenueTotal = await client.Order.findMany({
+        where: {
+            order_date: {
+                gte: new Date(new Date().setDate(new Date().getDate() - 7))
+            },
+            order_status: 5
+        },
+        select: {
+            order_quantity: true,
+            order_product_code: true,
+            product: {
+                select: {
+                    product_price: true
+                }
+            }
+        }
+    })
+
+    // compute weekly revenue from weeklyRevenueTotal
+    let weeklyRevenue = 0
+    weeklyRevenueTotal.forEach(order => {
+        weeklyRevenue += order.order_quantity * parseFloat(order.product.product_price)
+    })
+
+    console.log(weeklyRevenueTotal)
 
     res.status(200).json({
-        dayRevenue: dayRevenueTotal[0].revenue,
-        weeklyRevenue: weeklyRevenueTotal[0].weekly_revenue
+        day: dayRevenue,
+        weeklyRevenue: weeklyRevenue
     })
+
+    // res.status(200).json({
+    //     dayRevenue: dayRevenueTotal[0].daily_revenue,
+    //     weeklyRevenue: weeklyRevenueTotal[0].weekly_revenue
+    // })
 
     await disconnect()
 }
