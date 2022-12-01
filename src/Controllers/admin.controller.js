@@ -101,11 +101,20 @@ const updateAdmin = async (req, res) => {
 const getAdminForAuth = async (req, res) => {
     await connect()
 
-    const admin = await client.Admin.findUnique({
-        where: {
-            admin_username: req.params.username
-        }
-    })
+    try {
+        const admin = await client.Admin.findUnique({
+            where: {
+                admin_username: req.params.username
+            }
+        })
+        res.status(200).json({
+            adminDetails: {...admin, admin_password: admin.admin_password_hash}
+        })
+    } catch (e) {
+        res.status(400).json({
+            message: "Admin not found"
+        })
+    }
 
     // let decryptedAdmin = {
     //     ...admin,
@@ -117,9 +126,7 @@ const getAdminForAuth = async (req, res) => {
     //     "admin_password_salt", "admin_password_hash"
     // )
 
-    res.status(200).json({
-        adminDetails: {...admin, admin_password: admin.admin_password_hash}
-    })
+
 
     await disconnect()
 }
