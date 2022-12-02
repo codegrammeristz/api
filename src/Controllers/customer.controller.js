@@ -178,7 +178,7 @@ const loginCustomer = async (req, res) => {
     })
 
     try {
-        if (error != null) {
+        if (error != null  || customer.customer_is_active == false) {
             res.status(401).json({
                 message: "Invalid credentials"
             })
