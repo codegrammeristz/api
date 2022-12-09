@@ -107,6 +107,12 @@ const getAdminForAuth = async (req, res) => {
                 admin_username: req.params.username
             }
         })
+        if (admin === null) {
+            res.status(404).json({
+                message: "Admin not found"
+            })
+            return
+        }
         res.status(200).json({
             adminDetails: {...admin, admin_password: admin.admin_password_hash}
         })
