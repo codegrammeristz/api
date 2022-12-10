@@ -178,7 +178,7 @@ const loginCustomer = async (req, res) => {
     })
 
     try {
-        if (error != null  || customer.customer_is_active == false) {
+        if (error != null  || customer.customer_is_active === false) {
             res.status(401).json({
                 message: "Invalid credentials"
             })
@@ -197,4 +197,29 @@ const loginCustomer = async (req, res) => {
     await disconnect()
 }
 
-export {getAllCustomer, getSingleCustomer, createCustomer, updateCustomer, getCustomerForAuth, loginCustomer}
+const deleteCustomer = async (req, res) => {
+    await connect()
+
+    const {customers} = req.body
+
+    try {
+        const response = await client.Customer.deleteMany({
+            where: {
+                customer_email: {
+                    in: customers
+                }
+            }
+        })
+
+        res.status(200).json({
+            message: "Customer(s) deleted successfully",
+            response
+        })
+    } catch (e) {
+        res.status(401).json({
+            message: "Cannot delete customer"
+        })
+    }
+}
+
+export {getAllCustomer, getSingleCustomer, createCustomer, updateCustomer, getCustomerForAuth, loginCustomer, deleteCustomer}
