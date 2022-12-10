@@ -7,7 +7,8 @@ import {
     getSingleCustomer,
     updateCustomer,
     getCustomerForAuth,
-    loginCustomer
+    loginCustomer,
+    deleteCustomer
 } from "../Controllers/customer.controller.js";
 
 // router
@@ -22,5 +23,6 @@ router.get("/:email", getSingleCustomer);
 router.post("/createCustomer", createCustomer);
 router.put("/updateCustomer/:email", updateCustomer);
 router.get("/auth/:email", getCustomerForAuth);
+router.delete("/delete", deleteCustomer)
 
 export { router as customerRoutes }
